@@ -1,0 +1,17 @@
+{
+  "name": "devtinder-backend",
+  "version": "1.0.0",
+  "description": "this ap is like tinder of developer",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/app.js",
+    "start": "src/app.js"
+  },
+  "author": "Parvez",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "moongose": "^1.0.0",
+    "nodemon": "^3.1.14"
+  }
+}
