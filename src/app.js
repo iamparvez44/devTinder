@@ -3,10 +3,14 @@ const connectDB = require("../config/dataBase.js");
 const User = require("./models/user.model.js");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const cp = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const {userAuth} = require("../middleware/userAuth.js");
 
 const app = express();
 
 app.use(express.json());
+app.use(cp());
 
 // this is our sign up API to create a new user
 app.post("/singup", async (req, res) => {
@@ -153,13 +157,11 @@ app.post("/singup", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { emailId, password } = req.body;
-    
 
     const foundUser = await User.findOne({ emailId: emailId });
-    
 
     if (!foundUser) {
-      throw new Error("Invelid Credentials");
+      throw new Error("Invalid Credentials");
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -171,8 +173,15 @@ app.post("/login", async (req, res) => {
       throw new Error("Password is not correct");
     }
 
+    // here JWT is creating
+
+    const token = await jwt.sign({ _id: foundUser._id }, "CaptanAmerica");
+    console.log(token);
+
+    res.cookie("token", token);
+
     res.status(200).json({
-      msg: "User logged in succefully",
+      msg: "User logged in successfully",
       data: foundUser,
     });
   } catch (error) {
@@ -181,6 +190,18 @@ app.post("/login", async (req, res) => {
       error: error.message,
     });
   }
+});
+
+// testing profile access using cookies
+
+app.get("/profile", userAuth, async (req, res) => {
+ 
+const user = req.user
+
+  res.send({
+    message: "user found using token",
+    data: user,
+  });
 });
 
 // this api is to get the single user info
