@@ -4,6 +4,7 @@ const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const {userAuth} = require("../middleware/userAuth.js")
 
 // this is our sign up API to create a new user
 authRoutes.post("/singup", async (req, res) => {
@@ -169,7 +170,6 @@ authRoutes.post("/login", async (req, res) => {
     // here JWT is creating
 
     const token = await jwt.sign({ _id: foundUser._id }, "CaptanAmerica");
-    console.log(token);
 
     res.cookie("token", token);
 
@@ -184,6 +184,17 @@ authRoutes.post("/login", async (req, res) => {
     });
   }
 });
+
+//this api is to loggout the the user
+
+authRoutes.get("/logout",userAuth, (req, res)=>{
+  res.cookie("token", null, {
+    expires: new Date(Date.now())
+  }).send({
+    msg: "User loggout succefully",
+    data:req.user
+  })
+})
 
 module.exports = authRoutes
 

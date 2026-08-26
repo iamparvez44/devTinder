@@ -1,12 +1,12 @@
 authRouter:-
-  POST/signup
-  POST/login
-  POST/logout
+  POST/signup ===========> DONE
+  POST/login  ===========> DONE
+  POST/logout ===========> DONE
 
 profileRouter
-  GET/profile/view
-  PATCH/profile/edit
-  PATCH/profile/password
+  GET/profile/view ===========> DONE
+  PATCH/profile/edit ===========> DONE
+  PATCH/profile/password/change ===========> DONE
 
 connectionsRequestRouter
   POST/request/send/intereted/:userId

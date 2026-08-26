@@ -13,6 +13,10 @@ const userRoutes = require("../src/routes/userRoutes.js")
 const profileRoutes = require("../src/routes/profile.js")
 const connectionRoutes = require("../src/routes/connection.js")
 
+app.use("/", userRoutes);
+app.use("/", profileRoutes);
+app.use("/", connectionRoutes);
+
 
 connectDB()
   .then(() => {
