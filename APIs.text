@@ -9,14 +9,15 @@ profileRouter
   PATCH/profile/password/change ===========> DONE
 
 connectionsRequestRouter
-  POST/request/send/intereted/:userId
-  POST/request/send/ignored/:userId
-  POST/request/review/accepted/:requestId
-  POST/request/review/rejected/:requestId
+  POST/request/send/intereted/:userId  =======>DONE->similar
+  POST/request/send/ignored/:userId.  ========>DONE->similar
+  
+  POST/request/review/accepted/:requestId  =======>done->similar
+  POST/request/review/rejected/:requestId  =======>done
 
 userRouter
-  GET/user/connections
   GET/user/requests/recevied
+  GET/user/connections
   GET/user/feed- Get you the profile of other users on plateform
 
 

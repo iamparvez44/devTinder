@@ -10,9 +10,12 @@ profileRoutes.get("/profile/view", userAuth, (req, res) => {
   const user = req.user;
 
   try {
+    const userData = user.toObject();
+    delete userData.password;
+
     res.send({
       msg: "User fetch succefully",
-      data: user,
+      data: userData,
     });
   } catch (error) {
     res.status(400).send("ERROR" + error.message);
@@ -32,15 +35,19 @@ profileRoutes.patch("/profile/edit", userAuth, async (req, res) => {
     loggedInUser.firstName = req.body.firstName;
     loggedInUser.lastName = req.body.lastName;
     loggedInUser.age = req.body.age;
+    loggedInUser.gender = req.body.gender;
     loggedInUser.photoUrl = req.body.photoUrl;
     loggedInUser.about = req.body.about;
     loggedInUser.skills = req.body.skills;
 
     await loggedInUser.save();
 
+    const userData = loggedInUser.toObject();
+    delete userData.password;
+
     res.status(200).json({
       message: "User Edit succefully",
-      user: loggedInUser,
+      user: userData,
     });
   } catch (err) {
     res.status(400).json({
@@ -94,9 +101,12 @@ profileRoutes.patch("/profile/password/change", userAuth, async (req, res) => {
     loggedInUser.password = newHashPassword;
     await loggedInUser.save();
 
+    const userData = loggedInUser.toObject();
+    delete userData.password;
+
     res.status(200).send({
       msg: "password save succefully",
-      data: loggedInUser,
+      data: userData,
     });
   } catch (err) {
     console.log("ERROR:", err);

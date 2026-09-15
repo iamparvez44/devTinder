@@ -1,9 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model.js");
 
-
-
-
 // const userAuth = async (req, res, next) => {
 //   try {
 //     console.log("User auth called");
@@ -31,20 +28,17 @@ const User = require("../models/user.model.js");
 //   }
 // };
 
-
 const userAuth = async (req, res, next) => {
-
-  console.log("🔥 MIDDLEWARE RUNNING");
+  
 
   try {
     const { token } = req.cookies;
 
-
     if (!token) {
-      throw new Error("Token is not valid");
+      return res.status(401).send("Please logIn")
     }
 
-    const decodedObj = await jwt.verify(token, "CaptanAmerica");
+    const decodedObj = await jwt.verify(token, process.env.JWT_SECRET);
 
     const { _id } = decodedObj;
 
@@ -57,12 +51,9 @@ const userAuth = async (req, res, next) => {
     req.user = user;
 
     next();
-
   } catch (error) {
-   
-
     res.status(401).json({
-      message: "Unauthorized"
+      message: "Unauthorized",
     });
   }
 };

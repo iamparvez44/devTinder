@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const {userAuth} = require("../middleware/userAuth.js")
 
 // this is our sign up API to create a new user
-authRoutes.post("/singup", async (req, res) => {
+authRoutes.post("/signup", async (req, res) => {
   const {
     firstName,
     lastName,
@@ -135,9 +135,12 @@ authRoutes.post("/singup", async (req, res) => {
       skills,
     });
 
+    const userData = newUser.toObject();
+    delete userData.password;
+
     res.status(201).send({
       message: "Signup successful",
-      data: newUser,
+      data: userData,
     });
   } catch (error) {
     res.status(400).send({
@@ -169,13 +172,20 @@ authRoutes.post("/login", async (req, res) => {
 
     // here JWT is creating
 
-    const token = await jwt.sign({ _id: foundUser._id }, "CaptanAmerica");
+    const token = await jwt.sign({ _id: foundUser._id }, process.env.JWT_SECRET);
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+
+    const userData = foundUser.toObject();
+    delete userData.password;
 
     res.status(200).json({
       msg: "User logged in successfully",
-      data: foundUser,
+      data: userData,
     });
   } catch (error) {
     res.status(400).json({
@@ -189,10 +199,17 @@ authRoutes.post("/login", async (req, res) => {
 
 authRoutes.get("/logout",userAuth, (req, res)=>{
   res.cookie("token", null, {
-    expires: new Date(Date.now())
+    expires: new Date(Date.now()),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   }).send({
     msg: "User loggout succefully",
-    data:req.user
+    data: (() => {
+      const userData = req.user.toObject();
+      delete userData.password;
+      return userData;
+    })()
   })
 })
 

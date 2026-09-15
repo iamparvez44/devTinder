@@ -4,6 +4,7 @@ function validateEditProfileData(req) {
     "firstName",
     "lastName",
     "age",
+    "gender",
     "photoUrl",
     "about",
     "skills",
